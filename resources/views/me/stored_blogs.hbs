@@ -1,0 +1,123 @@
+<form
+  class="container mt-16"
+  method="post"
+  action="/blogs/handle-multiple-blogs"
+>
+  <h3>My blogs</h3>
+  <br />
+  <div class="mt-16 d-flex">
+    <div class="form-check" style="margin-left:16px">
+      <input
+        type="checkbox"
+        class="form-check-input"
+        id="checkAll"
+        name="checkAll"
+      />
+      <label for="checkAll" class="form-check-label">
+        Select All
+      </label>
+    </div>
+    <div class="select-action" style="margin-left:16px">
+      <select name="action" id="select-action">
+        <option value="empty">--Select Action--</option>
+        <option value="delete">Delete</option>
+      </select>
+    </div>
+    <div class="form-handle-multiple" style="margin-left:16px">
+      <button
+        disabled
+        id="handleMultipleBlogs"
+        class="btn btn-primary btn-sm"
+      >Action</button>
+    </div>
+  </div>
+  <br />
+  <table class="table mt-16" id="table-use-datatable">
+    <thead>
+      <tr>
+        <th scope="col"></th>
+        <th scope="col">ID</th>
+        <th scope="col">Title</th>
+        <th scope="col">CreatedAt</th>
+        <th scope="col">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <form action=""></form>
+      <!-- Help to form of restore handle-->
+      {{#each blogs}}
+        <tr>
+          <th scope="row">
+            <input type="checkbox" name="blogIds[]" value="{{this._id}}" />
+          </th>
+          <td>{{this._id}}</td>
+          <td>{{this.name}}</td>
+          <td>{{this.createdAt}}</td>
+          <td>
+            <a
+              href="/blogs/{{this._id}}/edit"
+              class="btn btn-primary"
+            >Update</a>
+            <a
+              href="#"
+              class="btn btn-danger"
+              data-toggle="modal"
+              data-target="#modal-delete-{{this._id}}"
+            >Delete</a>
+          </td>
+        </tr>
+
+        <!-- Modal delete-->
+        <div
+          class="modal fade"
+          id="modal-delete-{{this._id}}"
+          tabindex="-1"
+          role="dialog"
+          aria-labelledby="exampleModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete this blog!</h5>
+                <button
+                  type="button"
+                  class="close"
+                  data-dismiss="modal"
+                  aria-label="Close"
+                >
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                Do you want to delete this blog ?
+              </div>
+              <div class="modal-footer">
+                <form method="POST" action="/blogs/{{this._id}}?_method=DELETE">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                  <button
+                    type="button"
+                    class="btn btn-primary"
+                    data-dismiss="modal"
+                  >Cancel</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      {{else}}
+        <td colspan="5" class="text-center">List blogs is empty!
+          <a href="/blogs/create">Create new blog</a></td>
+      {{/each}}
+    </tbody>
+  </table>
+</form>
+
+<script
+  src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"
+></script>
+<script src="/js/handleMultipleBlogSelection.js"></script>
+<script>
+  $(document).ready(function() { $('#table-use-datatable').DataTable({
+  "columnDefs": [{ "targets": [0, 4], "orderable": false }] }); });
+</script>
